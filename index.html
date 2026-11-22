@@ -2,94 +2,33 @@
 <html lang="tg">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OnlineMarketTJ</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#222}
-header{background:#087b55;color:white;padding:20px;text-align:center}
-header h1{margin:0;font-size:25px}
-header p{margin:7px 0 0}
-.search{padding:15px}
-.search input{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;font-size:16px}
-.categories{display:flex;gap:10px;overflow-x:auto;padding:5px 15px}
-.categories button{border:0;padding:12px 17px;border-radius:20px;background:white;white-space:nowrap}
-h2{padding:0 15px}
-.products{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
-.card{background:white;border-radius:14px;overflow:hidden;padding-bottom:12px;box-shadow:0 2px 8px #ddd}
-.card img{width:100%;height:135px;object-fit:cover}
-.card h3{font-size:15px;margin:10px}
-.price{color:#087b55;font-weight:bold;margin:10px}
-.card button{background:#087b55;color:white;border:0;padding:10px;border-radius:8px;margin:0 10px}
-nav{position:fixed;bottom:0;background:white;width:100%;display:flex;justify-content:space-around;padding:15px 5px;box-shadow:0 -2px 10px #ddd}
-nav button{border:0;background:none;font-size:13px}
-main{padding-bottom:75px}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b7a55">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MarketTJ">
+<meta name="description" content="OnlineMarketTJ: бозори онлайнии Тоҷикистон. Харед ва фурӯшед.">
+<title>OnlineMarketTJ — Бозори онлайнии Тоҷикистон</title>
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="css/styles.css">
+<!-- Telegram Mini App: вне Telegram скрипт ничего не меняет -->
+<script src="https://telegram.org/js/telegram-web-app.js" async></script>
 </head>
 <body>
-
-<header>
-<h1>🇹🇯 OnlineMarketTJ</h1>
-<p>Бозори онлайнии Тоҷикистон</p>
+<header class="topbar" id="topbar">
+  <button class="icon-btn" id="back-btn" aria-label="Бозгашт" hidden></button>
+  <a class="brand" href="#/"><span class="brand-mark">🇹🇯</span><span>OnlineMarket<b>TJ</b></span></a>
+  <nav class="top-links" id="top-links" aria-label="Меню"></nav>
 </header>
 
-<div class="search">
-<input id="search" placeholder="🔍 Ҷустуҷӯи маҳсулот..." oninput="searchProducts()">
-</div>
+<main id="view" class="container" aria-live="polite"></main>
 
-<div class="categories">
-<button onclick="filter('Ҳама')">Ҳама</button>
-<button onclick="filter('Электроника')">📱 Электроника</button>
-<button onclick="filter('Либос')">👕 Либос</button>
-<button onclick="filter('Кӯдакон')">🧸 Кӯдакон</button>
-<button onclick="filter('Хона')">🏠 Барои хона</button>
-</div>
+<nav class="bottom-nav" id="bottom-nav" aria-label="Меню"></nav>
 
-<main>
-<h2>Маҳсулоти нав</h2>
-<div class="products" id="products"></div>
-</main>
-
-<nav>
-<button onclick="showAll()">🏠<br>Асосӣ</button>
-<button onclick="showCart()">🛒<br>Сабад</button>
-<button onclick="alert('Ба наздикӣ дастрас мешавад')">❤️<br>Дӯстдошта</button>
-<button onclick="alert('Ба наздикӣ дастрас мешавад')">👤<br>Профил</button>
-</nav>
-
-<script>
-const items=[
-{name:'Мошини кӯдакона',price:'2800 сомонӣ',category:'Кӯдакон',img:'https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=500'},
-{name:'Телефони мобилӣ',price:'2500 сомонӣ',category:'Электроника',img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500'},
-{name:'Либоси зебо',price:'350 сомонӣ',category:'Либос',img:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500'},
-{name:'Мебели хона',price:'1800 сомонӣ',category:'Хона',img:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500'}
-];
-let cart=[];
-function render(list){
-document.getElementById('products').innerHTML=list.map((p,i)=>`
-<div class="card">
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<div class="price">${p.price}</div>
-<button onclick="addCart('${p.name}')">Ба сабад</button>
-</div>`).join('');
-}
-function filter(category){
-render(category==='Ҳама'?items:items.filter(p=>p.category===category));
-}
-function searchProducts(){
-let q=document.getElementById('search').value.toLowerCase();
-render(items.filter(p=>p.name.toLowerCase().includes(q)));
-}
-function addCart(name){
-cart.push(name);
-alert('Маҳсулот ба сабад илова шуд!');
-}
-function showCart(){
-alert(cart.length?'Сабади шумо:\n'+cart.join('\n'):'Сабад холӣ аст');
-}
-function showAll(){render(items)}
-render(items);
-</script>
+<noscript><p style="padding:24px;text-align:center">Барои кор кардани сайт JavaScript-ро фаъол кунед.</p></noscript>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
